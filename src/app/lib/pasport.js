@@ -13,9 +13,8 @@ passport.use(new JwtStrategy({
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: JWT_SECRET
 }, async (jwtPayload, done) => {
-  console.log('jwtPayload', jwtPayload)
   try {
-    const user = await User.findById(jwtPayload.userId);
+    const user = await User.findById(jwtPayload.id);
     if (!user) {
       return done(null, false); // No user found, reject.
     }
@@ -26,50 +25,50 @@ passport.use(new JwtStrategy({
 }));
 
 // Google OAuth Strategy
-// passport.use(new GoogleStrategy({
-//   clientID: process.env.GOOGLE_CLIENT_ID, // Use your Google OAuth client ID
-//   clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Use your Google OAuth client secret
-//   callbackURL: 'http://localhost:3000/api/auth/google/callback', // Your Google OAuth callback URL
-// }, async (accessToken, refreshToken, profile, done) => {
-//   try {
-//     let user = await User.findOne({ googleId: profile.id });
-//     if (!user) {
-//       // Create a new user if not found
-//       user = new User({
-//         googleId: profile.id,
-//         email: profile.emails[0].value,
-//         name: profile.displayName,
-//       });
-//       await user.save();
-//     }
-//     return done(null, user);
-//   } catch (err) {
-//     return done(err, false);
-//   }
-// }));
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID, // Use your Google OAuth client ID
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Use your Google OAuth client secret
+  callbackURL: `${process.env.NEXT_WEB_URL}/api/auth/google/callback`, // Your Google OAuth callback URL
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    let user = await User.findOne({ googleId: profile.id });
+    if (!user) {
+      // Create a new user if not found
+      user = new User({
+        googleId: profile.id,
+        email: profile.emails[0].value,
+        name: profile.displayName,
+      });
+      await user.save();
+    }
+    return done(null, user);
+  } catch (err) {
+    return done(err, false);
+  }
+}));
 
-// // Facebook OAuth Strategy
-// passport.use(new FacebookStrategy({
-//   clientID: process.env.FACEBOOK_APP_ID, // Use your Facebook App ID
-//   clientSecret: process.env.FACEBOOK_APP_SECRET, // Use your Facebook App secret
-//   callbackURL: 'http://localhost:3000/api/auth/facebook/callback',
-//   profileFields: ['id', 'emails', 'name'], // Specify the data you want from Facebook
-// }, async (accessToken, refreshToken, profile, done) => {
-//   try {
-//     let user = await User.findOne({ facebookId: profile.id });
-//     if (!user) {
-//       // Create a new user if not found
-//       user = new User({
-//         facebookId: profile.id,
-//         email: profile.emails[0].value,
-//         name: profile.displayName,
-//       });
-//       await user.save();
-//     }
-//     return done(null, user);
-//   } catch (err) {
-//     return done(err, false);
-//   }
-// }));
+// Facebook OAuth Strategy
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_CLIENT_ID, // Use your Facebook App ID
+  clientSecret: process.env.FACEBOOK_CLIENT_SECRET, // Use your Facebook App secret
+  callbackURL: `${process.env.NEXT_WEB_URL}/api/auth/facebook/callback`,
+  profileFields: ['id', 'emails', 'name'], // Specify the data you want from Facebook
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    let user = await User.findOne({ facebookId: profile.id });
+    if (!user) {
+      // Create a new user if not found
+      user = new User({
+        facebookId: profile.id,
+        email: profile.emails[0].value,
+        name: profile.displayName,
+      });
+      await user.save();
+    }
+    return done(null, user);
+  } catch (err) {
+    return done(err, false);
+  }
+}));
 
 export default passport;

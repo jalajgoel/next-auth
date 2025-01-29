@@ -7,36 +7,25 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link'; // Import Link for internal navigation
 
 export default function RootLayout({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(false);
   const router = useRouter();
 
   // Check if the user is logged in by checking the JWT token
-  // useEffect(() => {
-  //   const checkAuth = async () => {
-  //     const token = localStorage.getItem('token');
-  //     if (token) {
-  //       // Make an API call to check if the token is valid
-  //       const res = await fetch('/api/check-auth', {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       if (res.ok) {
-  //         const user = await res.json();
-  //         setUser(user);
-  //       } else {
-  //         setUser(null);
-  //       }
-  //     }
-  //   };
-  //   checkAuth();
-  // }, []);
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('jwtToken');
+      if (token) {
+        // Make an API call to check if the token is valid
+        setUser(true)
+      }
+    };
+    checkAuth();
+  }, []);
 
   // Logout handler
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove the JWT token from localStorage
-    setUser(null); // Reset user state
+    localStorage.removeItem('jwtToken'); // Remove the JWT token from localStorage
+    setUser(false); // Reset user state
     router.push('/login'); // Redirect to login page
   };
 
@@ -49,7 +38,7 @@ export default function RootLayout({ children }) {
             <div>
               {user ? (
                 <>
-                  <span className="mr-4">Welcome, {user.name}</span>
+                  <span className="mr-4">Welcome</span>
                   <button 
                     className="text-white"
                     onClick={handleLogout} // Trigger logout

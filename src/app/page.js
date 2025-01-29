@@ -1,7 +1,18 @@
+'use client'
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from 'next/navigation';
 
 // app/page.js
 export default function HomePage() {
+  const router = useRouter();
+
+  useEffect(() => {
+      const token = localStorage.getItem('jwtToken')
+      if(token) {
+        router.push('/protected')
+      }
+    }, [])
   return (
     <div className="container mx-auto py-8 flex text-black">
       <h1 className="text-3xl font-bold text-center mb-4">Welcome To My Auth App</h1>&nbsp;

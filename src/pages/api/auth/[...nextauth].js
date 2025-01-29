@@ -12,8 +12,8 @@ export const authOptions = {
     
     // Facebook OAuth provider
     FacebookProvider({
-      clientId: process.env.FACEBOOK_APP_ID,
-      clientSecret: process.env.FACEBOOK_APP_SECRET,
+      clientId: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     }),
   ],
   pages: {
@@ -33,7 +33,7 @@ export const authOptions = {
       return session;
     },
   },
-  secret: process.env.JWT_SECRET,
+  secret: process.env.SECRET,
 };
 
 // Default export to handle NextAuth requests

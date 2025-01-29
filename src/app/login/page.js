@@ -1,8 +1,9 @@
 'use client'; // Mark this component as a client component
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react'; // Import NextAuth's signIn method
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -23,7 +24,7 @@ export default function LoginPage() {
 
     if (res.ok) {
       const data = await res.json();
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('jwtToken', data.token);
       router.push('/protected'); // Redirect to protected page after login
     } else {
       setError('Invalid credentials. Please try again.');
@@ -45,6 +46,13 @@ export default function LoginPage() {
       router.push('/protected'); // Redirect to protected page after Facebook login
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken')
+    if(token) {
+      router.push('/protected')
+    }
+  }, [])
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md text-black">
@@ -93,6 +101,7 @@ export default function LoginPage() {
       >
         Login with Facebook
       </button>
+      <Link href="/signup">Signup</Link>
     </div>
   );
 }

@@ -12,8 +12,9 @@ export default function ProtectedPage() {
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem('token'); // Get token from localStorage
+      const jwtToken = localStorage.getItem('jwtToken'); // Get token from localStorage
 
-      if (!token) {
+      if (!token && !jwtToken) {
         router.push('/login'); // Redirect to login if no token
         return;
       }
@@ -21,7 +22,7 @@ export default function ProtectedPage() {
       const res = await fetch('/api/protected', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`, // Attach token in the header
+          'Authorization': `Bearer ${token || jwtToken}`, // Attach token in the header
         },
       });
 

@@ -7,6 +7,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Authentication failed' });
     }
     // Store user information in session or send JWT token for the client to store
-    res.redirect('/dashboard'); // Redirect to a dashboard or home page after login
+    res.redirect('/protected'); // Redirect to a dashboard or home page after login
   })(req, res);
 }

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Signup() {
   const [name, setName] = useState('');
@@ -31,12 +32,19 @@ export default function Signup() {
 
     if (res.ok) {
       const data = await res.json();
-      localStorage.setItem('token', data.token); // Save token (optional, if you want to auto-login)
-      router.push('/login'); // Redirect to login page after sign-up
+      localStorage.setItem('jwtToken', data.token); // Save token (optional, if you want to auto-login)
+      router.push('/protected'); // Redirect to login page after sign-up
     } else {
       setError('Signup failed. Please try again.');
     }
   };
+
+  useEffect(() => {
+      const token = localStorage.getItem('jwtToken')
+      if(token) {
+        router.push('/protected')
+      }
+    }, [])
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md text-black">
@@ -90,6 +98,7 @@ export default function Signup() {
           Sign Up
         </button>
       </form>
+      <Link href="/login">Login</Link>
     </div>
   );
 }
