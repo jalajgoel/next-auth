@@ -41,7 +41,7 @@ export default function ProtectedPage() {
   if (loading) return <div>Loading...</div>;
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove token from localStorage
+    localStorage.removeItem('jwtToken'); // Remove token from localStorage
     router.push('/login'); // Redirect to login page
   };
 

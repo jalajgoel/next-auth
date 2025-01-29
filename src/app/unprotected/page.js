@@ -1,3 +1,4 @@
+'use client'
 export default function UnprotectedPage() {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100 text-black">

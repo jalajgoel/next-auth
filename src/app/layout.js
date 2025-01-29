@@ -11,15 +11,15 @@ export default function RootLayout({ children }) {
 
   // Check if the user is logged in by checking the JWT token
   useEffect(() => {
-    const checkAuth = async () => {
+    // const checkAuth = async () => {
       const token = localStorage.getItem('jwtToken');
       if (token) {
         // Make an API call to check if the token is valid
         setUser(true)
       }
-    };
-    checkAuth();
-  }, []);
+    // };
+    // checkAuth();
+  }, [router]);
 
   // Logout handler
   const handleLogout = () => {
@@ -27,6 +27,8 @@ export default function RootLayout({ children }) {
     setUser(false); // Reset user state
     router.push('/login'); // Redirect to login page
   };
+
+  console.log("user", user)
 
   return (
     <html lang="en">
