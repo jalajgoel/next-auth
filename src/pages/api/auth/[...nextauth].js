@@ -33,7 +33,7 @@ export const authOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.JWT_SECRET,
 };
 
 // Default export to handle NextAuth requests
