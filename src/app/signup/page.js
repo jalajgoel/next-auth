@@ -1,59 +1,92 @@
-// app/signup/page.js
-'use client'; // Marking this as a client component
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Signup() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const router = useRouter(); // useRouter from next/navigation
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Clear any previous errors
-    setError('');
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
 
-    // Send signup data to API
-    const res = await fetch('/api/auth/signup', {
+    // Send request to backend for signup
+    const res = await fetch('/api/signup', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, password }),
     });
 
-    const data = await res.json();
-
     if (res.ok) {
-      // Redirect to the login page on successful signup
-      router.push('/login');
+      const data = await res.json();
+      localStorage.setItem('token', data.token); // Save token (optional, if you want to auto-login)
+      router.push('/login'); // Redirect to login page after sign-up
     } else {
-      // Display error message from API response
-      setError(data.error || 'Something went wrong. Please try again.');
+      setError('Signup failed. Please try again.');
     }
   };
 
   return (
-    <div className="max-w-sm mx-auto">
-      <h2>Sign Up</h2>
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md text-black">
+      <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="block w-full p-2 my-2 border rounded"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="block w-full p-2 my-2 border rounded"
-        />
-        {error && <div className="text-red-500">{error}</div>}
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded">
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Name</label>
+          <input
+            type="text"
+            className="w-full p-2 border rounded-md"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Email</label>
+          <input
+            type="email"
+            className="w-full p-2 border rounded-md"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Password</label>
+          <input
+            type="password"
+            className="w-full p-2 border rounded-md"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Confirm Password</label>
+          <input
+            type="password"
+            className="w-full p-2 border rounded-md"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
           Sign Up
         </button>
       </form>
