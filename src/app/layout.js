@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 'use client'; // <-- Mark this as a client component
 
 import './globals.css'; // Global CSS
